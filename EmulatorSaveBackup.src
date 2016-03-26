@@ -1,0 +1,8 @@
+#!/bin/bash
+#Created By Lance Zeligman
+#Creates automatic backups of Visualboy Save games and Save states 
+mkdir /home/lance/Games/Saves/sgm-$(date +"%m-%d-%y")
+cp /home/lance/.config/gvbam/*.sgm /home/lance/Games/Saves/sgm-$(date +"%m-%d-%y")
+
+mkdir /home/lance/Games/Saves/sav-$(date +"%m-%d-%y")
+cp /home/lance/.config/gvbam/*.sav /home/lance/Games/Saves/sav-$(date +"%m-%d-%y")
