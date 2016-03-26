@@ -3,23 +3,48 @@
 #Creates automatic backups of Visualboy Save games and Save states 
 #Version 2.0
 
+#Set default paths
+defsavedir=/home/$USER/Games/Saves
+defgvbamdir=/home/$USER/.config/gvbam
+
+#Set local paths by reading user input
+read -p "Enter your local save directory (ENTER to use the default /home/$USER/Games/Saves): " savedir
+echo
+read -p "Enter your gvbam directory (ENTER to use the default /home/$USER/.config/gvbam): " gvbamdir
+# if the user didn't enter anything, use the defaults set above
+if [ $savedir -z ]; then 
+	savedir="$defsavedir"
+fi
+if [! -d $savedir ]; then
+	echo "$savedir does not exist. Ensure the directory exists, and re-run this script."
+	exit 1
+fi
+
+if [ $gvbamdir -z ]; then
+	gvbamdir="$defgvbamdir"
+fi
+if [! -d $gvbamdir ]; then
+	echo "$gvbamdir does not exist. Ensure the directory exists, and re-run this script."
+	exit 1
+fi
+
 #Finds the most recent folder and sets it as a variable
-mostrecentsav=$( ls -tp /home/lance/Games/Saves/sav/ | head -1)
-mostrecentsgm=$( ls -tp /home/lance/Games/Saves/sgm/ | head -1)
+mostrecentsav=$( ls -tp $savedir/sav/ | head -1)
+mostrecentsgm=$( ls -tp $savedir/sgm/ | head -1)
 
 #Diffs the VBA-M save folders against the most recent backup and sets that to be a variable 
-valuesav=$( diff --exclude="*.sgm" -r /home/lance/.config/gvbam/sgm /home/lance/Games/Saves/sav/$(echo $mostrecentsav) )
-valuesgm=$( diff --exclude="*.sav" -r /home/lance/.config/gvbam/sgm /home/lance/Games/Saves/sgm/$(echo $mostrecentsgm) )
+valuesav=$( diff --exclude="*.sgm" -r $gvbamdir/sgm $savedir/sav/$(echo $mostrecentsav) )
+valuesgm=$( diff --exclude="*.sav" -r $gvbamdir/sgm $savedir/sgm/$(echo $mostrecentsgm) )
 
 #Checks value of the diff and if it's equal to 1 or higher will create a back up folder labeled with the date it was run
 if [ "$valuesgm >= 1" ];
 then
-	mkdir /home/lance/Games/Saves/sgm/$(date +"%m-%d-%y")
-	cp /home/lance/.config/gvbam/sgm/*.sgm /home/lance/Games/Saves/sgm/$(date +"%m-%d-%y")
+	mkdir $savedir/sgm/$(date +"%m-%d-%y")
+	cp $gvbamdir/sgm/*.sgm $savedir/sgm/$(date +"%m-%d-%y")
 fi
 
 if [ "$valuesav >= 1" ];
 then
-	mkdir /home/lance/Games/Saves/sav/$(date +"%m-%d-%y")
-	cp /home/lance/.config/gvbam/sgm/*.sav /home/lance/Games/Saves/sav/$(date +"%m-%d-%y")
+	mkdir $savedir/sav/$(date +"%m-%d-%y")
+	cp $gvbamdir/sgm/*.sav $savedir/sav/$(date +"%m-%d-%y")
 fi
