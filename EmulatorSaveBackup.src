@@ -15,7 +15,7 @@ read -p "Enter your gvbam directory (ENTER to use the default /home/$USER/.confi
 if [ $savedir -z ]; then 
 	savedir="$defsavedir"
 fi
-if [! -d $savedir ]; then
+if [ ! -d $savedir ]; then
 	echo "$savedir does not exist. Ensure the directory exists, and re-run this script."
 	exit 1
 fi
@@ -23,7 +23,7 @@ fi
 if [ $gvbamdir -z ]; then
 	gvbamdir="$defgvbamdir"
 fi
-if [! -d $gvbamdir ]; then
+if [ ! -d $gvbamdir ]; then
 	echo "$gvbamdir does not exist. Ensure the directory exists, and re-run this script."
 	exit 1
 fi
