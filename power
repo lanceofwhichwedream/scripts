@@ -1,0 +1,26 @@
+#!/bin/bash
+#Created by Lance Zeligman
+#Displays current battery information in libnotify
+#Version 1.0
+
+#Sets the variables for charging discharing along with percentage and charging time and discharging
+
+value=$(upower -i /org/freedesktop/UPower/devices/battery_BAT0 | grep state | awk '{print $2}')
+
+percentage=$(upower -i /org/freedesktop/UPower/devices/battery_BAT0 | grep "percentage" | awk '{print $2}')
+
+chargetime=$(upower -i /org/freedesktop/UPower/devices/battery_BAT0 | grep "time to full" | awk '{print $4" "$5}')
+
+dischargetime=$(upower -i /org/freedesktop/UPower/devices/battery_BAT0 | grep "time to empty" | awk '{print $4" "$5}')
+
+#Runs the actual logic to determine which variables need to be run
+
+if [ "$value == charging" ];
+then
+	notify-send "Battery Information" "Battery is currently at $percentage and $value. It will take $chargetime to be fully charged."
+fi
+
+if [ "$value == discharging" ];
+then
+	notify-send "Battery Information" "Battery is currently at $percentage and $value. It will take $dischargetime to be fully discharged."
+fi
